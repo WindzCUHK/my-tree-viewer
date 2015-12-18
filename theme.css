@@ -1,0 +1,50 @@
+* {
+	margin: 0;
+	padding: 0;
+	border: none;
+}
+
+html, body {
+	width: 100%;
+	height: 100%;
+	position: relative;
+}
+
+/*http://stackoverflow.com/questions/90178/make-a-div-fill-the-height-of-the-remaining-screen-space*/
+
+#container {
+	height: inherit;
+}
+
+.list-block {
+	background-color: #0C0;
+	float: left;
+	height: 100%;
+	min-width: 20em;
+}
+.list-block:hover {
+	background-color: #3F3;
+}
+
+
+.item-list {
+	background-color: #00C;
+	list-style-type: none;
+}
+
+.item-with-image {
+	background-color: #BBB;
+}
+.item-with-image:hover {
+	background-color: #EEE;
+}
+
+.item-with-image > img {
+	max-width: 4em;
+	max-height: 4em;
+	margin: 5px;
+}
+.item-with-image > span {
+	margin-left: 1ex;
+	font-size: larger;
+}

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>React.js Template</title>
+
+		<!-- Latest compiled and minified CSS -->
+		<link rel="stylesheet" type="text/css" href="./lib/bootstrap-3.3.5-dist/css/bootstrap.min.css">
+		<link rel="stylesheet" type="text/css" href="./lib/bootstrap-3.3.5-dist/css/bootstrap-theme.min.css">
+		<link rel="stylesheet" type="text/css" href="./theme.css">
+	</head>
+	<body>
+		<div id="container">
+		<!-- This element's contents will be replaced with your component. -->
+		</div>
+
+		<script src="./lib/jquery-2.1.4.min.js"></script>
+		<script src="./lib/bootstrap-3.3.5-dist/js/bootstrap.min.js"></script>
+		<script src="./lib/react-0.14.0.min.js"></script>
+		<script src="./lib/react-dom-0.14.0.min.js"></script>
+		<script src="./node_modules/babel-core/browser.js"></script>
+
+		<script type="text/babel">
+
+var ItemList = React.createClass({
+	render: function() {
+		return (
+			<div className="list-block">
+				<ul className="item-list">
+					{this.props.itemTrees.map(function (tree) {
+						return <ItemWithImage itemName={tree.info.name} itemImgUri={tree.info.imageUri} childTreeId={tree.id} />;
+					})}
+				</ul>
+			</div>
+		);
+	}
+});
+
+var ItemWithImage = React.createClass({
+	render: function() {
+		return (
+			<li className="item-with-image" data-tree-id={this.props.childTreeId}>
+				<img title={this.props.itemName} alt={this.props.itemName} src={this.props.itemImgUri} />
+				<span>{this.props.itemName}</span>
+			</li>
+		);
+	}
+});
+
+
+var itemTrees = [
+	{
+		id: 1,
+		info: {name: "1st category", imageUri: "http://facebook.github.io//react/img/logo.svg"},
+		child: [
+			{parentId: 1, id: 5, info: {name: "123 name", imageUri: "http://hydra-media.cursecdn.com/minecraft.gamepedia.com/thumb/1/1d/No_image.svg/250px-No_image.svg.png?version=c92867b5151832293e5cf2197b47bf68"}}
+		]
+	},
+	{
+		id: 2,
+		info: {name: "2nd category", imageUri: "http://facebook.github.io//react/img/logo.svg"},
+		child: [
+			{parentId: 2, id: 3, info: {name: "abc name", imageUri: "http://hydra-media.cursecdn.com/minecraft.gamepedia.com/thumb/1/1d/No_image.svg/250px-No_image.svg.png?version=c92867b5151832293e5cf2197b47bf68"}},
+			{parentId: 2, id: 4, info: {name: "xyz name", imageUri: "http://hydra-media.cursecdn.com/minecraft.gamepedia.com/thumb/1/1d/No_image.svg/250px-No_image.svg.png?version=c92867b5151832293e5cf2197b47bf68"}}
+		]
+	}
+];
+ReactDOM.render(
+	<ItemList itemTrees={itemTrees} />,
+	document.getElementById('container')
+);
+
+		</script>
+		<script src="main.js"></script>
+	</body>
+</html>
