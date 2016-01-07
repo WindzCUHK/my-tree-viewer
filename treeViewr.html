@@ -18,9 +18,53 @@
 		<script src="./lib/bootstrap-3.3.5-dist/js/bootstrap.min.js"></script>
 		<script src="./lib/react-0.14.0.min.js"></script>
 		<script src="./lib/react-dom-0.14.0.min.js"></script>
+		<script src="./lib/reflux.min.js"></script>
 		<script src="./node_modules/babel-core/browser.js"></script>
 
 		<script type="text/babel">
+
+var Actions = Reflux.createActions([
+	"openList",
+	"openItem"
+]);
+
+var treeStatusStore = Reflux.createStore({
+	// auto call onActionName()
+	listenables: [Actions],
+	onOpenList: function(level, childList) {
+		console.log("onOpenList");
+	},
+	onOpenItem: function(level, childList) {
+		console.log("onOpenItem");
+	},
+	// called whenever we change a list. normally this would mean a database API call
+	updateTree: function(tree) {
+		localStorage.setItem(localStorageKey, JSON.stringify(list));
+		// if we used a real database, we would likely do the below in a callback
+		this.list = list;
+		this.trigger(list); // sends the updated list to all listening components (TodoApp)
+	},
+	// this will be called by all listening components as they register their listeners
+	getInitialState: function() {
+		var loadedList = localStorage.getItem(localStorageKey);
+		if (!loadedList) {
+			// If no list is in localstorage, start out with a default one
+			this.list = [{
+				key: todoCounter++,
+				created: new Date(),
+				isComplete: false,
+				label: 'Rule the web'
+			}];
+		} else {
+			// this.list = _.map(JSON.parse(loadedList), function(item) {
+			// 	// just resetting the key property for each todo item
+			// 	item.key = todoCounter++;
+			// 	return item;
+			// });
+		}
+		return this.list;
+	}
+});
 
 var ItemList = React.createClass({
 	render: function() {
@@ -37,9 +81,12 @@ var ItemList = React.createClass({
 });
 
 var ItemWithImage = React.createClass({
+	handleOpen: function() {
+		Actions.openItem(1, null);
+	},
 	render: function() {
 		return (
-			<li className="item-with-image" data-tree-id={this.props.childTreeId}>
+			<li className="item-with-image" data-tree-id={this.props.childTreeId} onClick={this.handleOpen}>
 				<img title={this.props.itemName} alt={this.props.itemName} src={this.props.itemImgUri} />
 				<span>{this.props.itemName}</span>
 			</li>
