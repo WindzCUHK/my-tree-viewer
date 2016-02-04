@@ -4,6 +4,10 @@
 		<meta charset="utf-8">
 		<title>React.js Template</title>
 
+		<!-- http://codepen.io/nicolasegosum/pen/PqVBON -->
+		<!-- http://codepen.io/terf/pen/vgurb -->
+		<!-- http://codepen.io/hone/pen/jERzmd -->
+
 		<!-- Latest compiled and minified CSS -->
 		<link rel="stylesheet" type="text/css" href="./lib/bootstrap-3.3.5-dist/css/bootstrap.min.css">
 		<link rel="stylesheet" type="text/css" href="./lib/bootstrap-3.3.5-dist/css/bootstrap-theme.min.css">
@@ -35,7 +39,12 @@ var treeStatusStore = Reflux.createStore({
 		console.log("onOpenList");
 	},
 	onOpenItem: function(level, childList) {
-		console.log("onOpenItem");
+		if (childList) displayTreeList[level + 1] = childList;
+		console.log(childList);
+		ReactDOM.render(
+			<ItemListArray displayTreeList={displayTreeList} />,
+			document.getElementById('container')
+		);
 	},
 	// called whenever we change a list. normally this would mean a database API call
 	updateTree: function(tree) {
@@ -66,13 +75,25 @@ var treeStatusStore = Reflux.createStore({
 	}
 });
 
+var ItemListArray = React.createClass({
+	render: function() {
+		return (
+			<div>
+				{this.props.displayTreeList.map(function(itemTrees) {
+					return <ItemList itemTrees={itemTrees} />;
+				})}
+			</div>
+		);
+	}
+});
+
 var ItemList = React.createClass({
 	render: function() {
 		return (
 			<div className="list-block">
 				<ul className="item-list">
 					{this.props.itemTrees.map(function (tree) {
-						return <ItemWithImage itemName={tree.info.name} itemImgUri={tree.info.imageUri} childTreeId={tree.id} />;
+						return <ItemWithImage itemName={tree.info.name} itemImgUri={tree.info.imageUri} treeId={tree.id} treeLevel={tree.level} childTree={tree.child} />;
 					})}
 				</ul>
 			</div>
@@ -82,11 +103,11 @@ var ItemList = React.createClass({
 
 var ItemWithImage = React.createClass({
 	handleOpen: function() {
-		Actions.openItem(1, null);
+		Actions.openItem(this.props.treeLevel, this.props.childTree);
 	},
 	render: function() {
 		return (
-			<li className="item-with-image" data-tree-id={this.props.childTreeId} onClick={this.handleOpen}>
+			<li className="item-with-image" data-tree-id={this.props.treeId} onClick={this.handleOpen}>
 				<img title={this.props.itemName} alt={this.props.itemName} src={this.props.itemImgUri} />
 				<span>{this.props.itemName}</span>
 			</li>
@@ -94,7 +115,7 @@ var ItemWithImage = React.createClass({
 	}
 });
 
-
+// data
 var itemTrees = [
 	{
 		id: 1,
@@ -112,8 +133,18 @@ var itemTrees = [
 		]
 	}
 ];
+// assign level to tree
+(function assignLevel(itemTrees, currentLevel) {
+	itemTrees.forEach(function (it) {
+		it.level = currentLevel;
+		if (it.child) assignLevel(it.child, currentLevel + 1);
+	});
+})(itemTrees, 1);
+// only data on show
+var displayTreeList = [itemTrees];
+
 ReactDOM.render(
-	<ItemList itemTrees={itemTrees} />,
+	<ItemListArray displayTreeList={displayTreeList} />,
 	document.getElementById('container')
 );
 
