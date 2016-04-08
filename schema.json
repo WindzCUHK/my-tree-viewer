@@ -1,0 +1,64 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "id": "http://localhost/schemas/schema.json",
+
+  
+
+  "type": "object",
+  "title": "node tree - node trees",
+  "required": [
+    "name",
+    "pic",
+    "description",
+    "childs",
+    "tags"
+  ],
+  "properties": {
+    "level": {
+      "type": "integer"
+    },
+    "id": {
+      "type": "integer",
+      "description": "unique identifier"
+    },
+    "name": {
+      "type": "string",
+      "description": "node name"
+    },
+    "pic": {
+      "type": "string",
+      "description": "picture URL"
+    },
+    "description": {
+      "type": "string",
+      "description": "node description"
+    },
+    "childs": {
+      "type": "array",
+      "items": {
+        "$ref": "#"
+      },
+      "description": "node childs"
+    },
+    "tags": {
+      "type": "string",
+      "description": "for speed up searching"
+    }
+  }
+}
+
+
+{
+  "level": 0,
+  "name": "123",
+  "pic": "123",
+  "description": "123",
+  "childs": [
+    {
+      "name": "xxx",
+      "pic": "xxx",
+      "description": "xxx",
+      "childs": []
+    }
+  ]
+}
